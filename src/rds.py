@@ -40,6 +40,39 @@ class RDS:
             ]
         )
 
+    def describe_instances(self):
+        print("Describing all RDS instances...")
+        return self._client.describe_db_instances()
+
+    def modify_master_user_password(self, db_identifier, new_password):
+        print("Modifying master user password...")
+        return self._client.modify_db_instance(
+            DBInstanceIdentifier=db_identifier,
+            MasterUserPassword=new_password
+        )
+
+    def take_backup_of_db_instance(self, db_identifier, db_snapshot_identifier, tags):
+        print("Backing up DB instance...")
+        return self._client.create_db_snapshot(
+            DBInstanceIdentifier=db_identifier,
+            DBSnapshotIdentifier=db_snapshot_identifier,
+            Tags=tags
+        )
+
+    def restore_db_from_backup(self, db_identifier, db_snapshot_identifier):
+        print("Restoring DB from snapshot...")
+        return self._client.restore_db_instance_from_db_snapshot(
+            DBInstanceIdentifier=db_identifier,
+            DBSnapshotIdentifier=db_snapshot_identifier
+    )
+
+    def delete_db(self, db_identifier):
+        print("Deleting RDS Instance with name " + db_identifier)
+        return self._client.delete_db_instance(
+            DBInstanceIdentifier=db_identifier,
+            SkipFinalSnapshot=True
+        )
+
     def create_db_subnet_group(self):
         print("Creating RDS DB Subnet Group " + RDS_DB_SUBNET_NAME)
         self._client.create_db_subnet_group(
